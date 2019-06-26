@@ -19,20 +19,22 @@ class protocol_reactor(object):
 
     def check_available_packet(self,):
         #check packet is available format, using "STX", CheckSum", "CheckXor", and "ETX" item.
-        check_available_STX()
-        check_available_CheckSum()
-        check_available_CheckXor()
-        check_available_ETX()
+        print(self.check_available_STX(),
+        self.check_available_ETX(),
+        self.check_available_Length(),
+        self.check_available_CheckSum(),
+        self.check_available_CheckXor()
+        )
 
     def separate_packet(self,):
         # find code : 'item_idx changed'
-        self.STX = self.slice_packet(item_idx['STX_idx'])
-        self.Length = self.slice_packet(item_idx['Length_idx'])
-        self.PID = self.slice_packet(item_idx['PID_idx'])
-        self.Data = self.slice_packet(item_idx['Data_idx'], item_idx['CheckSum_idx']) # find code : 'item_idx changed' // 'Data' item has dynamic length, so check this line.
-        self.CheckSum = self.slice_packet(item_idx['CheckSum_idx'])
-        self.CheckXor = self.slice_packet(item_idx['CheckXor_idx'])
-        self.ETX = self.slice_packet(item_idx['ETX_idx'])
+        self.STX = self.packet[item_idx['STX_idx']]
+        self.Length = self.packet[item_idx['Length_idx']]
+        self.PID = self.packet[item_idx['PID_idx']]
+        self.Data = self.packet[item_idx['Data_idx'] : item_idx['CheckSum_idx']] # find code : 'item_idx changed' // 'Data' item has dynamic length, so check this line.
+        self.CheckSum = self.packet[item_idx['CheckSum_idx']]
+        self.CheckXor = self.packet[item_idx['CheckXor_idx']]
+        self.ETX = self.packet[item_idx['ETX_idx']]
     
         self.packet_dict = {
             'STX' : self.STX,
@@ -44,35 +46,49 @@ class protocol_reactor(object):
             'ETX' : self.ETX
             }
     
-    #sub method
-    def slice_packet(self, idx, fin_idx = None, item_length = 1):
-        if fin_idx == None:
-            if idx == -1:
-                return self.packet[unit_item_size *idx :]
-            return self.packet[unit_item_size *idx : unit_item_size *idx + unit_item_size * item_length]
-        
-        else: 
-            return self.packet[unit_item_size *idx : unit_item_size *fin_idx]
 
     def check_available_STX(self,):
-        pass
+        if self.STX == 0xAA:
+            return True
+        return False
     
+    def check_available_Length(self,):
+        length = len(self.packet_dict['Data']) + 0x03
+        if length == self.Length:
+            return True
+        return False
+
     def check_available_CheckSum(self,):
-        pass
+        sum_result = 0
+        for byte in self.packet[:-3]:
+            sum_result += byte
+        
+        remove_overflow_sum_result = sum_result%256
+
+        if remove_overflow_sum_result == self.CheckSum:
+            return True
+        return False
+
 
     def check_available_CheckXor(self,):
-        pass
+        xor_result = self.packet[0]
+        for byte in self.packet[1:-3]:
+            xor_result = xor_result ^ byte
+        
+        if xor_result == self.CheckXor : 
+            return True
+        return  False
+
+
 
     def check_available_ETX(self,):
-        pass
+        if self.ETX == 0x55:
+            return True
+        return False
 
     
-pr = protocol_reactor('ABCDEFGHIJKLMNO')
+pr = protocol_reactor([0xAA, 0x0D, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0xc2, 0xa6, 0x55])
 pr.separate_packet()
 print(pr.packet_dict)
+print(pr.check_available_packet())
 
-pr = protocol_reactor('ABCDEFGHIJKLMNOPQRS')
-pr.separate_packet()
-print(pr.packet_dict)
-
-pass
