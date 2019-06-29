@@ -1,21 +1,125 @@
+import serial
+import struct
+
 ################
 # about packet #
 ################
 unit_item_size = 2
 item_idx = {
-            'STX_idx': 0, 
-            'Length_idx' : 1, 
-            'PID_idx' : 2, 
-            'Data_idx' : 3, 
-            'CheckSum_idx' : -3, 
-            'CheckXor_idx' : -2, 
-            'ETX_idx' : -1
-            }
+    'STX_idx': 0, 
+    'Length_idx' : 1, 
+    'PID_idx' : 2, 
+    'Data_idx' : 3, 
+    'CheckSum_idx' : -3, 
+    'CheckXor_idx' : -2, 
+    'ETX_idx' : -1
+    }
+
+data_size = {
+    'LED control' : 10,
+    'BLDC motor control' : 4,
+    'BLDC homing control' : 1,
+    'Step motor control' : 2,
+    'Step homing control' : 1,
+    'Laser control' : 1,
+    'Status' : 43,
+    'LED_#_#' : 1,
+    'PHOTO_#_#' : 2,
+    'BLDC break' : 1,
+    'BLDC direction' : 1,
+    'BLDC speed' : 2,
+    'BLDC home' : 1, 
+    'Step moving' : 1,
+    'Step position' : 2,
+    'Step home' : 1,
+    'Laser state' : 1,
+    'Battery voltage' : 2,
+    'Battery check' : 1,
+}
+
+uart_option = {
+    'port' : '/dev/ttyAMA0',
+    'baudrate' : 38400,
+    'timeout' : 0.15,
+}
+
+##################
+# About hardware #
+##################
+LED_info = {
+    'row' : ['A','B','C','D','E'],
+    'num' : ['1','2'],
+}
+PHOTO_info = {
+    'row' : ['A','B','C','D','E'],
+    'num' : ['1','2'],
+}
 #When you change "item_idx", press 'crtl + f' and find 'item_idx changed' in this source code.
 
-class protocol_reactor(object):
-    def __init__(self, packet):
-        self.packet = packet
+class packet_reactor(object):
+    def __init__(self):
+        pass
+
+    def packet_receive(self,):
+        self.packet = self.packet_receive_from_uart()
+        self.packet_available = self.check_available_packet()
+        
+        if self.packet_available == True : 
+            self.received_packet_separate()
+            return self.packet
+        else : 
+            return False
+
+    def packet_transmit(self,):
+
+
+
+    def received_data_separate(self,):
+        data_cur_idx = 0
+        
+        #Get LED diode data
+        for row in LED_info['row'] : 
+            for num in LED_info['num']:
+                self.received_data['LED']['LED_{}_{}'%(row, num)] = self.Data[data_cur_idx]
+                data_cur_idx += data_size['LED_#_#']
+
+        #Get Photo diode data
+        for row in PHOTO_info['row'] : 
+            for num in PHOTO_info['num']:
+                self.received_data['PHOTO']['PHOTO_{}_{}'%(row, num)] = self.Data[data_cur_idx:data_cur_idx + data_size['PHOTO_#_#']]
+                data_cur_idx += data_size['PHOTO_#_#']
+
+        #Get data
+        data_cur_idx = self.received_data_separate_by_description('BLDC break', data_cur_idx)
+        data_cur_idx = self.received_data_separate_by_description('BLDC direction', data_cur_idx)
+        data_cur_idx = self.received_data_separate_by_description('BLDC speed', data_cur_idx)
+        data_cur_idx = self.received_data_separate_by_description('BLDC home', data_cur_idx)
+
+        data_cur_idx = self.received_data_separate_by_description('Step moving', data_cur_idx)
+        data_cur_idx = self.received_data_separate_by_description('Step position', data_cur_idx)
+        data_cur_idx = self.received_data_separate_by_description('Step home', data_cur_idx)
+
+        data_cur_idx = self.received_data_separate_by_description('Laser state', data_cur_idx)
+        data_cur_idx = self.received_data_separate_by_description('Battery voltage', data_cur_idx)
+        data_cur_idx = self.received_data_separate_by_description('Battery check', data_cur_idx)
+
+
+    def received_data_separate_by_description(self, description, data_cur_idx):
+        self.received_data[description] = self.Data[data_cur_idx]
+        data_cur_idx += data_size[description]
+        return data_cur_idx
+
+        
+    def packet_receive_from_uart(self,):
+        srl = serial.Serial(port = uart_option['port'], baudrate = uart_option['baudrate'], timeout = uart_option['timeout'])
+        
+        received_byte_list = list()
+        for i in range(data_size['Status']):
+            if srl.readable():
+                received_byte = struct.unpack('B',srl.read())
+                received_byte_list.append(received_byte[0])
+
+        return received_byte_list
 
     def check_available_packet(self,):
         #check packet is available format, using "STX", CheckSum", "CheckXor", and "ETX" item.
@@ -26,7 +130,7 @@ class protocol_reactor(object):
         self.check_available_CheckXor() :
             return True
 
-    def separate_packet(self,):
+    def received_packet_separate(self,):
         # find code : 'item_idx changed'
         self.STX = self.packet[item_idx['STX_idx']]
         self.Length = self.packet[item_idx['Length_idx']]
@@ -45,19 +149,15 @@ class protocol_reactor(object):
             'CheckXor' : self.CheckXor,
             'ETX' : self.ETX
             }
-    
-
     def check_available_STX(self,):
         if self.STX == 0xAA:
             return True
         return False
-    
     def check_available_Length(self,):
         length = len(self.packet_dict['Data']) + 0x03
         if length == self.Length:
             return True
         return False
-
     def check_available_CheckSum(self,):
         sum_result = 0
         for byte in self.packet[:-3]:
@@ -68,8 +168,6 @@ class protocol_reactor(object):
         if remove_overflow_sum_result == self.CheckSum:
             return True
         return False
-
-
     def check_available_CheckXor(self,):
         xor_result = self.packet[0]
         for byte in self.packet[1:-3]:
@@ -78,17 +176,14 @@ class protocol_reactor(object):
         if xor_result == self.CheckXor : 
             return True
         return  False
-
-
-
     def check_available_ETX(self,):
         if self.ETX == 0x55:
             return True
         return False
 
     
-pr = protocol_reactor([0xAA, 0x0D, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0xc2, 0xa6, 0x55])
-pr.separate_packet()
+pr = packet_reactor([0xAA, 0x0D, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0xc2, 0xa6, 0x55])
+
 print(pr.packet_dict)
 print(pr.check_available_packet())
 
