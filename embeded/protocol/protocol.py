@@ -19,12 +19,12 @@ class protocol_reactor(object):
 
     def check_available_packet(self,):
         #check packet is available format, using "STX", CheckSum", "CheckXor", and "ETX" item.
-        print(self.check_available_STX(),
-        self.check_available_ETX(),
-        self.check_available_Length(),
-        self.check_available_CheckSum(),
-        self.check_available_CheckXor()
-        )
+        if self.check_available_STX() and \
+        self.check_available_ETX() and \
+        self.check_available_Length() and \
+        self.check_available_CheckSum() and \
+        self.check_available_CheckXor() :
+            return True
 
     def separate_packet(self,):
         # find code : 'item_idx changed'
