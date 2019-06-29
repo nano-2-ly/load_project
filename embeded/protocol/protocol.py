@@ -70,8 +70,94 @@ class packet_reactor(object):
         else : 
             return False
 
-    def packet_transmit(self,):
+    def packet_transmit(self, description, data):
+        data_array = self.create_data_array(description, data)
+        self.create_packet_array(data_array)
 
+    def create_packet_array(self, data_array)
+    
+    def create_data_array(self, description, data):
+        '''
+        *** Usage ***
+
+        self.create_data_array('LED control', '0000011111')
+        self.create_data_array('BLDC motor control', ['Break':'Break disable', 'Direction' : 'CCW', 'Speed' : 10])
+        self.create_data_array('BLDC homing control', 'enalbe')
+        self.create_data_array('Step motor control', 1000)
+        '''
+        if description == 'LED control':
+            if len(data) == data_size['LED control']:
+                data_array = []
+
+                for i in range(data):
+                    if i == '0':
+                        data_array.append(0)
+                    elif i == '1':
+                        data_array.append(1)
+                return data_array
+
+
+        elif description == 'BLDC motor control':
+            data_array = []
+
+            if data['Break'] == 'Break enable':
+                data_array.append(1)
+            elif data['Break'] == 'Break disable':
+                data_array.append(0)
+
+            if data['Direction'] == 'CCW':
+                data_array.append(0)
+            elif data['Direction'] == 'CW':
+                data_array.append(1)
+
+            if data['Speed'] <= 4000:
+                speed_first_byte = data['Speed']//256
+                speed_second_byte = data['Speed']%256
+                data_array.append(speed_first_byte)
+                data_array.append(speed_second_byte)
+            return data_array
+
+        elif description == 'BLDC homing control':
+            data_array = []
+            
+            if data == 'enable':
+                data_array.append(1)
+            elif data == 'disable':
+                data_array.append(0)
+
+            return data_array
+
+        elif description == 'Step motor control':
+            data_array = []
+            first_position_byte = data//256
+            second_position_byte = data%256
+            data_array.append(first_position_byte)
+            data_array.append(second_position_byte)
+
+            return data_array
+    
+        elif description == 'Step homing control':
+            data_array = []
+            
+            if data == 'enable':
+                data_array.append(1)
+            elif data == 'disable':
+                data_array.append(0)
+
+            return data_array
+
+        elif description == 'Laser control':
+            data_array = []
+            
+            if data == 'On':
+                data_array.append(1)
+            elif data == 'Off':
+                data_array.append(0)
+
+            return data_array
+
+        else:
+            return False
 
 
     def received_data_separate(self,):
