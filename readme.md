@@ -23,7 +23,7 @@ pr = packet_reactor()
 When you receive data from MCU(micro control unit) or transmit data to MCU,
 ~~~
 pr.packet_receive()
-pr.packet_transmit(PID, data)
+pr.packet_transmit(description, data)
 ~~~
 
 After you receive data by packet_receive() method, object get item like below.
