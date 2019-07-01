@@ -109,7 +109,7 @@ class packet_reactor(object):
             if len(data) == data_size['LED control']:
                 data_array = []
 
-                for i in range(data):
+                for i in data:
                     if i == '0':
                         data_array.append(0)
                     elif i == '1':
