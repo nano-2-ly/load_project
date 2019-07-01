@@ -69,6 +69,9 @@ PID_info = {
 class packet_reactor(object):
     def __init__(self):
         self.received_data = {}
+        self.received_data['LED'] = {}
+        self.received_data['PHOTO'] = {}
+
 
     def packet_receive(self,):
         self.packet = self.packet_receive_from_uart()
@@ -187,13 +190,13 @@ class packet_reactor(object):
         #Get LED diode data
         for row in LED_info['row'] : 
             for num in LED_info['num']:
-                self.received_data['LED']['LED_{}_{}'%(row, num)] = self.Data[data_cur_idx]
+                self.received_data['LED']['LED_{}_{}'.format(row, num)] = self.Data[data_cur_idx]
                 data_cur_idx += data_size['LED_#_#']
 
         #Get Photo diode data
         for row in PHOTO_info['row'] : 
             for num in PHOTO_info['num']:
-                self.received_data['PHOTO']['PHOTO_{}_{}'%(row, num)] = self.Data[data_cur_idx:data_cur_idx + data_size['PHOTO_#_#']]
+                self.received_data['PHOTO']['PHOTO_{}_{}'.format(row, num)] = self.Data[data_cur_idx:data_cur_idx + data_size['PHOTO_#_#']]
                 data_cur_idx += data_size['PHOTO_#_#']
 
         #Get data
@@ -308,3 +311,11 @@ pr = packet_reactor()
 
 pr.packet_transmit('BLDC motor control', {'Break':'Break disable', 'Direction' : 'CCW', 'Speed' : 10})
 print(pr.packet_to_transmit)
+
+
+'''
+pr.packet = list(range(49))
+pr.received_packet_separate()
+pr.received_data_separate()
+pass
+'''
