@@ -82,8 +82,8 @@ class packet_reactor(object):
 
     def packet_transmit(self, description, data):
         data_array = self.create_data_array(description, data)
-        packet_to_transmit = self.create_packet_array(description, data_array)
-        self.packet_transmit_to_uart(packet_to_transmit)
+        self.packet_to_transmit = self.create_packet_array(description, data_array)
+        self.packet_transmit_to_uart(self.packet_to_transmit)
 
     def packet_transmit_to_uart(self, packet):
         srl = serial.Serial(port = uart_option['port'], baudrate = uart_option['baudrate'], timeout = uart_option['timeout'])
