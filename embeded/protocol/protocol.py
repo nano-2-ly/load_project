@@ -68,7 +68,7 @@ PID_info = {
 
 class packet_reactor(object):
     def __init__(self):
-        pass
+        self.received_data = {}
 
     def packet_receive(self,):
         self.packet = self.packet_receive_from_uart()
@@ -183,7 +183,7 @@ class packet_reactor(object):
 
     def received_data_separate(self,):
         data_cur_idx = 0
-        
+
         #Get LED diode data
         for row in LED_info['row'] : 
             for num in LED_info['num']:
