@@ -57,7 +57,7 @@ PHOTO_info = {
 
 PID_info = {
     'LED control' : 0x01,
-    'BLCD motor control' : 0x02,
+    'BLDC motor control' : 0x02,
     'BLDC homing control' : 0x03,
     'Step motor control' : 0x04,
     'Step homing control' : 0x05,
@@ -83,7 +83,7 @@ class packet_reactor(object):
     def packet_transmit(self, description, data):
         data_array = self.create_data_array(description, data)
         self.packet_to_transmit = self.create_packet_array(description, data_array)
-        self.packet_transmit_to_uart(self.packet_to_transmit)
+        #self.packet_transmit_to_uart(self.packet_to_transmit)
 
     def packet_transmit_to_uart(self, packet):
         srl = serial.Serial(port = uart_option['port'], baudrate = uart_option['baudrate'], timeout = uart_option['timeout'])
@@ -301,8 +301,9 @@ class packet_reactor(object):
             xor_result = xor_result ^ byte
         
         return xor_result
-    
-pr = packet_reactor([0xAA, 0x0D, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0xc2, 0xa6, 0x55])
 
-print(pr.packet_dict)
-print(pr.check_available_packet())
+    
+pr = packet_reactor()
+
+pr.packet_transmit('BLDC motor control', {'Break':'Break disable', 'Direction' : 'CCW', 'Speed' : 10})
+print(pr.packet_to_transmit)
