@@ -54,6 +54,16 @@ PHOTO_info = {
     'row' : ['A','B','C','D','E'],
     'num' : ['1','2'],
 }
+
+PID_info = {
+    'LED control' : 0x01,
+    'BLCD motor control' : 0x02,
+    'BLDC homing control' : 0x03,
+    'Step motor control' : 0x04,
+    'Step homing control' : 0x05,
+    'Laser control' : 0x06,
+    'Description' : 0x11,
+}
 #When you change "item_idx", press 'crtl + f' and find 'item_idx changed' in this source code.
 
 class packet_reactor(object):
@@ -72,9 +82,20 @@ class packet_reactor(object):
 
     def packet_transmit(self, description, data):
         data_array = self.create_data_array(description, data)
-        self.create_packet_array(data_array)
+        packet_to_transmit = self.create_packet_array(description, data_array)
+        self.packet_transmit_to_uart(packet_to_transmit)
 
-    def create_packet_array(self, data_array)
+    def packet_transmit_to_uart(self, packet):
+        srl = serial.Serial(port = uart_option['port'], baudrate = uart_option['baudrate'], timeout = uart_option['timeout'])
+        srl.write(bytes(bytearray(packet)))
+
+    def create_packet_array(self, description, data_array):
+        first_three_bytes = [0xaa, data_size[description] +3, PID_info[description]]
+        except_last_three_bytes = first_three_bytes + data_array
+        CheckSum_byte = self.calc_CheckSum(except_last_three_bytes)
+        CheckXor_byte = self.calc_CheckXor(except_last_three_bytes)
+        created_full_packet = except_last_three_bytes + [CheckSum_byte, CheckXor_byte, 0x55]
+        return created_full_packet
     
     def create_data_array(self, description, data):
         '''
@@ -266,7 +287,21 @@ class packet_reactor(object):
         if self.ETX == 0x55:
             return True
         return False
+    def calc_CheckSum(self, except_three_bytes_packet):
+        sum_result = 0
+        for byte in except_three_bytes_packet:
+            sum_result += byte
+        
+        remove_overflow_sum_result = sum_result%256
 
+        return remove_overflow_sum_result
+    
+    def calc_CheckXor(self, except_three_bytes_packet):
+        xor_result = except_three_bytes_packet[0]
+        for byte in except_three_bytes_packet[1:]:
+            xor_result = xor_result ^ byte
+        
+        return xor_result
     
 pr = packet_reactor([0xAA, 0x0D, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0xc2, 0xa6, 0x55])
 
