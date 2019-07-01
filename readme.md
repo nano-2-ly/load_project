@@ -1,4 +1,4 @@
-<img src="./readme/img/logo.png" width="40%" height="40%"></br>
+<img src="./readme/img/logo.png" width="35%" height="35%"></br>
 # LOAD(lab on a chip)
 LOAD(lab on a chip) system control program
 
