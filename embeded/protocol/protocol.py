@@ -73,6 +73,7 @@ class packet_reactor(object):
     def packet_receive(self,):
         self.packet = self.packet_receive_from_uart()
         self.received_packet_separate()
+        self.received_data_separate()
         self.packet_available = self.check_available_packet()
         
         if self.packet_available == True : 
