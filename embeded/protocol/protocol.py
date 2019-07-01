@@ -72,10 +72,10 @@ class packet_reactor(object):
 
     def packet_receive(self,):
         self.packet = self.packet_receive_from_uart()
+        self.received_packet_separate()
         self.packet_available = self.check_available_packet()
         
         if self.packet_available == True : 
-            self.received_packet_separate()
             return self.packet
         else : 
             return False
@@ -100,7 +100,6 @@ class packet_reactor(object):
     def create_data_array(self, description, data):
         '''
         *** Usage ***
-
         self.create_data_array('LED control', '0000011111')
         self.create_data_array('BLDC motor control', ['Break':'Break disable', 'Direction' : 'CCW', 'Speed' : 10])
         self.create_data_array('BLDC homing control', 'enalbe')
@@ -307,4 +306,3 @@ pr = packet_reactor([0xAA, 0x0D, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01, 0x01,
 
 print(pr.packet_dict)
 print(pr.check_available_packet())
-
