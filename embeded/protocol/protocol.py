@@ -1,6 +1,7 @@
 import serial
 import struct
-
+import time
+import json
 ################
 # about packet #
 ################
@@ -73,7 +74,8 @@ class packet_reactor(object):
         self.received_data['PHOTO'] = {}
 
 
-    def packet_receive(self,):
+    def packet_receive(self, sleep_time = 1):
+        time.sleep(sleep_time)
         self.packet = self.packet_receive_from_uart()
         self.received_packet_separate()
         self.received_data_separate()
@@ -84,10 +86,12 @@ class packet_reactor(object):
         else : 
             return False
 
-    def packet_transmit(self, description, data):
+    def packet_transmit(self, description, data, sleep_time = 1):
+        time.sleep(sleep_time)
         data_array = self.create_data_array(description, data)
         self.packet_to_transmit = self.create_packet_array(description, data_array)
-        #self.packet_transmit_to_uart(self.packet_to_transmit)
+        self.packet_transmit_to_uart(self.packet_to_transmit)
+        
 
     def packet_transmit_to_uart(self, packet):
         srl = serial.Serial(port = uart_option['port'], baudrate = uart_option['baudrate'], timeout = uart_option['timeout'])
@@ -224,7 +228,7 @@ class packet_reactor(object):
         srl = serial.Serial(port = uart_option['port'], baudrate = uart_option['baudrate'], timeout = uart_option['timeout'])
         
         received_byte_list = list()
-        for i in range(data_size['Status']):
+        for i in range(data_size['Status'] + 6):
             if srl.readable():
                 received_byte = struct.unpack('B',srl.read())
                 received_byte_list.append(received_byte[0])
@@ -308,9 +312,18 @@ class packet_reactor(object):
 
     
 pr = packet_reactor()
+pr.packet_transmit('Step motor control', 0)
 
-pr.packet_transmit('BLDC motor control', {'Break':'Break disable', 'Direction' : 'CCW', 'Speed' : 10})
+pr.packet_transmit('BLDC motor control', {'Break':'Break enable', 'Direction' : 'CW', 'Speed' : 1000})
 print(pr.packet_to_transmit)
+pr.packet_transmit('LED control', '0000000000', 0.1)
+
+pr.packet_transmit('Laser control', 'Off')
+while(1):
+    pr.packet_receive(1)
+        
+    print(json.dumps(pr.received_data))
+    
 
 
 '''
