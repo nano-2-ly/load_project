@@ -314,7 +314,7 @@ class packet_reactor(object):
 pr = packet_reactor()
 pr.packet_transmit('Step motor control', 0)
 
-pr.packet_transmit('BLDC motor control', {'Break':'Break enable', 'Direction' : 'CW', 'Speed' : 1000})
+pr.packet_transmit('BLDC motor control', {'Break':'Break enable', 'Direction' : 'CW', 'Speed' : 1000}   )
 print(pr.packet_to_transmit)
 pr.packet_transmit('LED control', '0000000000', 0.1)
 
