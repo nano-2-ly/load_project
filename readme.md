@@ -66,3 +66,9 @@ pr.create_data_array('Step motor control', 1000)
 pr.create_data_array('Laser control', 'On')
 ~~~
 
+# json format
+~~~
+{"BLDC direction": 1, "BLDC break": 1, "BLDC home": 0, "LED": {"LED_D_1": 0, "LED_D_2": 0, "LED_C_2": 0, "LED_C_1": 0, "LED_A_1": 0, "LED_A_2": 0, "LED_B_2": 0, "LED_B_1": 0, "LED_E_1": 0, "LED_E_2": 0}, "Laser state": 0, "Step position": 0, "Step moving": 0, "PHOTO": {"PHOTO_C_2": [128, 0], "PHOTO_C_1": [123, 0], "PHOTO_B_2": [119, 0], "PHOTO_B_1": [117, 0], "PHOTO_E_1": [114, 0], "PHOTO_E_2": [0, 0], "PHOTO_A_1": [120, 0], "PHOTO_A_2": [105, 0], "PHOTO_D_1": [125, 0], "PHOTO_D_2": [0, 0]}, "BLDC speed": 0, "Battery voltage": 184, "Battery check": 0, "Step home": 0}
+{"BLDC direction": 1, "BLDC break": 1, "BLDC home": 0, "LED": {"LED_D_1": 0, "LED_D_2": 0, "LED_C_2": 0, "LED_C_1": 0, "LED_A_1": 0, "LED_A_2": 0, "LED_B_2": 0, "LED_B_1": 0, "LED_E_1": 0, "LED_E_2": 0}, "Laser state": 0, "Step position": 0, "Step moving": 0, "PHOTO": {"PHOTO_C_2": [196, 0], "PHOTO_C_1": [194, 0], "PHOTO_B_2": [187, 0], "PHOTO_B_1": [188, 0], "PHOTO_E_1": [195, 0], "PHOTO_E_2": [0, 0], "PHOTO_A_1": [194, 0], "PHOTO_A_2": [170, 0], "PHOTO_D_1": [190, 0], "PHOTO_D_2": [0, 0]}, "BLDC speed": 0, "Battery voltage": 196, "Battery check": 0, "Step home": 0}
+{"BLDC direction": 1, "BLDC break": 1, "BLDC home": 0, "LED": {"LED_D_1": 0, "LED_D_2": 0, "LED_C_2": 0, "LED_C_1": 0, "LED_A_1": 0, "LED_A_2": 0, "LED_B_2": 0, "LED_B_1": 0, "LED_E_1": 0, "LED_E_2": 0}, "Laser state": 0, "Step position": 0, "Step moving": 0, "PHOTO": {"PHOTO_C_2": [183, 0], "PHOTO_C_1": [182, 0], "PHOTO_B_2": [177, 0], "PHOTO_B_1": [179, 0], "PHOTO_E_1": [188, 0], "PHOTO_E_2": [0, 0], "PHOTO_A_1": [184, 0], "PHOTO_A_2": [163, 0], "PHOTO_D_1": [186, 0], "PHOTO_D_2": [0, 0]}, "BLDC speed": 0, "Battery voltage": 188, "Battery check": 0, "Step home": 0}
+~~~
