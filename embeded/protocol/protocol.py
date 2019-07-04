@@ -3,7 +3,7 @@ import struct
 import time
 import json
 import sys
-sys.path.append('./protocol/')
+##sys.path.append('./')
 from protocol.option import *
 
 class packet_reactor(object):

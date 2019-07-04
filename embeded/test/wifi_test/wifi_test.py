@@ -2,7 +2,6 @@ import os
 import time
 import json
 
-
 from socket import *
 
 
@@ -31,6 +30,5 @@ while(1):
 	
 client.close()
 server.close()
-	
-	
+
 	
