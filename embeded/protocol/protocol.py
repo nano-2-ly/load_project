@@ -202,7 +202,7 @@ class packet_reactor(object):
         #Get data
         data_cur_idx = self.received_data_separate_by_description('BLDC break', data_cur_idx)
         data_cur_idx = self.received_data_separate_by_description('BLDC direction', data_cur_idx)
-        data_cur_idx = self.received_data_separate_by_description('BLDC speed', data_cur_idx)
+        data_cur_idx = self.received_data_separate_by_description('BLDC sp  eed', data_cur_idx)
         data_cur_idx = self.received_data_separate_by_description('BLDC home', data_cur_idx)
 
         data_cur_idx = self.received_data_separate_by_description('Step moving', data_cur_idx)
@@ -313,9 +313,8 @@ pr.packet_transmit('BLDC motor control', {'Break':'Break disable', 'Direction' :
 print(pr.packet_to_transmit)
 
 
-'''
+
 pr.packet = list(range(49))
 pr.received_packet_separate()
 pr.received_data_separate()
 pass
-'''
