@@ -1,7 +1,7 @@
 import sys
-sys.path.append('../')
-from protocol.protocol import *
-from protocol.wifi import *
+#sys.path.append('./')
+from protocol import *
+from wifi import *
 import json
 
 # declare server and packet_reactor
@@ -11,7 +11,6 @@ pr = packet_reactor()
 # receive data from server
 sv.socket_open()
 received_data = sv.recv_data()
-print(received_data)
 
-#pr.packet_transmit(received_data['description'], received_data['data'])
+pr.packet_transmit(received_data['description'], received_data['data'])
 
