@@ -1,70 +1,8 @@
 import serial
 import struct
-
-################
-# about packet #
-################
-unit_item_size = 2
-item_idx = {
-    'STX_idx': 0, 
-    'Length_idx' : 1, 
-    'PID_idx' : 2, 
-    'Data_idx' : 3, 
-    'CheckSum_idx' : -3, 
-    'CheckXor_idx' : -2, 
-    'ETX_idx' : -1
-    }
-
-data_size = {
-    'LED control' : 10,
-    'BLDC motor control' : 4,
-    'BLDC homing control' : 1,
-    'Step motor control' : 2,
-    'Step homing control' : 1,
-    'Laser control' : 1,
-    'Status' : 43,
-    'LED_#_#' : 1,
-    'PHOTO_#_#' : 2,
-    'BLDC break' : 1,
-    'BLDC direction' : 1,
-    'BLDC speed' : 2,
-    'BLDC home' : 1, 
-    'Step moving' : 1,
-    'Step position' : 2,
-    'Step home' : 1,
-    'Laser state' : 1,
-    'Battery voltage' : 2,
-    'Battery check' : 1,
-}
-
-uart_option = {
-    'port' : '/dev/ttyAMA0',
-    'baudrate' : 38400,
-    'timeout' : 0.15,
-}
-
-##################
-# About hardware #
-##################
-LED_info = {
-    'row' : ['A','B','C','D','E'],
-    'num' : ['1','2'],
-}
-PHOTO_info = {
-    'row' : ['A','B','C','D','E'],
-    'num' : ['1','2'],
-}
-
-PID_info = {
-    'LED control' : 0x01,
-    'BLDC motor control' : 0x02,
-    'BLDC homing control' : 0x03,
-    'Step motor control' : 0x04,
-    'Step homing control' : 0x05,
-    'Laser control' : 0x06,
-    'Description' : 0x11,
-}
-#When you change "item_idx", press 'crtl + f' and find 'item_idx changed' in this source code.
+import time
+import json
+from option import *
 
 class packet_reactor(object):
     def __init__(self):
@@ -73,7 +11,8 @@ class packet_reactor(object):
         self.received_data['PHOTO'] = {}
 
 
-    def packet_receive(self,):
+    def packet_receive(self, sleep_time = 1):
+        time.sleep(sleep_time)
         self.packet = self.packet_receive_from_uart()
         self.received_packet_separate()
         self.received_data_separate()
@@ -84,10 +23,12 @@ class packet_reactor(object):
         else : 
             return False
 
-    def packet_transmit(self, description, data):
+    def packet_transmit(self, description, data, sleep_time = 1):
+        time.sleep(sleep_time)
         data_array = self.create_data_array(description, data)
         self.packet_to_transmit = self.create_packet_array(description, data_array)
-        #self.packet_transmit_to_uart(self.packet_to_transmit)
+        self.packet_transmit_to_uart(self.packet_to_transmit)
+        
 
     def packet_transmit_to_uart(self, packet):
         srl = serial.Serial(port = uart_option['port'], baudrate = uart_option['baudrate'], timeout = uart_option['timeout'])
@@ -224,7 +165,7 @@ class packet_reactor(object):
         srl = serial.Serial(port = uart_option['port'], baudrate = uart_option['baudrate'], timeout = uart_option['timeout'])
         
         received_byte_list = list()
-        for i in range(data_size['Status']):
+        for i in range(data_size['Status'] + 6):
             if srl.readable():
                 received_byte = struct.unpack('B',srl.read())
                 received_byte_list.append(received_byte[0])
@@ -306,15 +247,23 @@ class packet_reactor(object):
         
         return xor_result
 
-    
+'''
 pr = packet_reactor()
+pr.packet_transmit('Step motor control', 0)
 
-pr.packet_transmit('BLDC motor control', {'Break':'Break disable', 'Direction' : 'CCW', 'Speed' : 10})
+pr.packet_transmit('BLDC motor control', {'Break':'Break enable', 'Direction' : 'CW', 'Speed' : 1000}   )
 print(pr.packet_to_transmit)
+pr.packet_transmit('LED control', '0000000000', 0.1)
 
-
+pr.packet_transmit('Laser control', 'Off')
+while(1):
+    pr.packet_receive(1)
+        
+    print(json.dumps(pr.received_data))
+    
 
 pr.packet = list(range(49))
 pr.received_packet_separate()
 pr.received_data_separate()
 pass
+'''
