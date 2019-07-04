@@ -2,7 +2,9 @@ import serial
 import struct
 import time
 import json
-from option import *
+import sys
+sys.path.append('./protocol/')
+from protocol.option import *
 
 class packet_reactor(object):
     def __init__(self):
