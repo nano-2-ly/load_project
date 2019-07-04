@@ -18,14 +18,14 @@ while(1):
 	msg = 'None'
 	while 1:
 		msg = client.recv(1024).encode('utf-8')
-		#print(json.loads(msg))
 		print(msg)
 		if '}' in msg:	
+			print('msg recv complete')
 			break
-	#client.sendall(msg.encode('utf-8'))
-	print('msg recv complete')
 	
-	json_val = json.dumps({"name":"KED", "age":20})
+	
+	print('dk Tlqkf')
+	json_val = json.dumps({"name":"KMHASD", "age":20, 'school':'unist'})
 	client.sendall(json_val.encode('utf-8'))
 	print('msg send complete')
 	
