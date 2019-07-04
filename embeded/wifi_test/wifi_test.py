@@ -23,9 +23,11 @@ while(1):
 		if '}' in msg:	
 			break
 	#client.sendall(msg.encode('utf-8'))
+	print('msg recv complete')
 	
 	json_val = json.dumps({"name":"KED", "age":20})
 	client.sendall(json_val.encode('utf-8'))
+	print('msg send complete')
 	
 client.close()
 server.close()
