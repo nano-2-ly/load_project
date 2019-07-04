@@ -90,7 +90,7 @@ and
 Turn on LED_C_2, LED_D_1, LED_D_2, LED_E_1, LED_E_2
 '''
 
-pr.create_data_array('LED control', '0000011111'
+pr.packet_transmit('LED control', '0000011111')
 ~~~
 ---
 ### 
