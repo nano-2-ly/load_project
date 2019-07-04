@@ -53,18 +53,47 @@ self.received_data['Battery check']
 When you tarnsmit data by packet_transmit() method, you have to use argument like below.
 ~~~
 #LED control
-pr.create_data_array('LED control', '0000011111')
+pr.packet_transmit('LED control', '0000011111')
 
 #BLDC motor control
-pr.create_data_array('BLDC motor control', ['Break':'Break disable', 'Direction' : 'CCW', 'Speed' : 10])
-pr.create_data_array('BLDC homing control', 'enable')
+pr.packet_transmit('BLDC motor control', ['Break':'Break disable', 'Direction' : 'CCW', 'Speed' : 10])
+pr.packet_transmit('BLDC homing control', 'enable')
 
 #Step motor control
-pr.create_data_array('Step motor control', 1000)
+pr.packet_transmit('Step motor control', 1000)
 
 #Laser control
-pr.create_data_array('Laser control', 'On')
+pr.packet_transmit('Laser control', 'On')
 ~~~
+---
+# Document<br>
+Here is more detail about usage of library.
+
+---
+### <packet_transmit()>
+### LED control
+~~~
+pr = packet_reactor()
+pr.packet_transmit('LED control', '0000011111') #argument type is <str>
+~~~
+This code is an example for turn on LED.<br>
+When you turn on LED, type "LED control" in first argument of create_data_array() method.<br>
+And you type that which LED you want to turn on/off in second argument of create_data_array() method.<br>
+Second argument is state of led which you want to control.
+First character of second argument is state of LED_A_1 which is in the PCB board.
+Second character of second argument is state of LED_A_2.
+Like this...
+~~~
+'''
+Turn off LED_A_1, LED_A_2, LED_B_1, LED_B_2, LED_C_1
+and
+Turn on LED_C_2, LED_D_1, LED_D_2, LED_E_1, LED_E_2
+'''
+
+pr.create_data_array('LED control', '0000011111'
+~~~
+---
+### 
 
 # json format
 ~~~
