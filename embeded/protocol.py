@@ -133,19 +133,19 @@ class packet_reactor(object):
         #Get LED diode data
         for row in LED_info['row'] : 
             for num in LED_info['num']:
-                self.received_data['LED']['LED_{}_{}'.format(row, num)] = self.Data[data_cur_idx]
+                self.received_data['LED_{}_{}'.format(row, num).replace(" ","").lower()] = self.Data[data_cur_idx]
                 data_cur_idx += data_size['LED_#_#']
 
         #Get Photo diode data
         for row in PHOTO_info['row'] : 
             for num in PHOTO_info['num']:
-                self.received_data['PHOTO']['PHOTO_{}_{}'.format(row, num)] = self.Data[data_cur_idx:data_cur_idx + data_size['PHOTO_#_#']]
+                self.received_data['PHOTO_{}_{}'.format(row, num).replace(" ","").lower()] = self.Data[data_cur_idx:data_cur_idx + data_size['PHOTO_#_#']]
                 data_cur_idx += data_size['PHOTO_#_#']
 
         #Get data
         data_cur_idx = self.received_data_separate_by_description('BLDC break', data_cur_idx)
         data_cur_idx = self.received_data_separate_by_description('BLDC direction', data_cur_idx)
-        data_cur_idx = self.received_data_separate_by_description('BLDC sp  eed', data_cur_idx)
+        data_cur_idx = self.received_data_separate_by_description('BLDC speed', data_cur_idx)
         data_cur_idx = self.received_data_separate_by_description('BLDC home', data_cur_idx)
 
         data_cur_idx = self.received_data_separate_by_description('Step moving', data_cur_idx)
@@ -158,7 +158,7 @@ class packet_reactor(object):
 
 
     def received_data_separate_by_description(self, description, data_cur_idx):
-        self.received_data[description] = self.Data[data_cur_idx]
+        self.received_data[description.replace(" ","").lower()] = self.Data[data_cur_idx]
         data_cur_idx += data_size[description]
         return data_cur_idx
 
