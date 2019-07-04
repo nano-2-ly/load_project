@@ -133,28 +133,28 @@ class packet_reactor(object):
         #Get LED diode data
         for row in LED_info['row'] : 
             for num in LED_info['num']:
-                self.received_data['LED']['LED_{}_{}'.format(row, num)] = self.Data[data_cur_idx]
+                self.received_data['led_{}_{}'.format(row.lower(), num)] = self.Data[data_cur_idx]
                 data_cur_idx += data_size['LED_#_#']
 
         #Get Photo diode data
         for row in PHOTO_info['row'] : 
             for num in PHOTO_info['num']:
-                self.received_data['PHOTO']['PHOTO_{}_{}'.format(row, num)] = self.Data[data_cur_idx:data_cur_idx + data_size['PHOTO_#_#']]
+                self.received_data['photo_{}_{}'.format(row.lower(), num)] = self.Data[data_cur_idx:data_cur_idx + data_size['PHOTO_#_#']]
                 data_cur_idx += data_size['PHOTO_#_#']
 
         #Get data
-        data_cur_idx = self.received_data_separate_by_description('BLDC break', data_cur_idx)
-        data_cur_idx = self.received_data_separate_by_description('BLDC direction', data_cur_idx)
-        data_cur_idx = self.received_data_separate_by_description('BLDC sp  eed', data_cur_idx)
-        data_cur_idx = self.received_data_separate_by_description('BLDC home', data_cur_idx)
+        data_cur_idx = self.received_data_separate_by_description('bldcbreak', data_cur_idx)
+        data_cur_idx = self.received_data_separate_by_description('bldcdirection', data_cur_idx)
+        data_cur_idx = self.received_data_separate_by_description('bldcspeed', data_cur_idx)
+        data_cur_idx = self.received_data_separate_by_description('bldchome', data_cur_idx)
 
-        data_cur_idx = self.received_data_separate_by_description('Step moving', data_cur_idx)
-        data_cur_idx = self.received_data_separate_by_description('Step position', data_cur_idx)
-        data_cur_idx = self.received_data_separate_by_description('Step home', data_cur_idx)
+        data_cur_idx = self.received_data_separate_by_description('stepmoving', data_cur_idx)
+        data_cur_idx = self.received_data_separate_by_description('stepposition', data_cur_idx)
+        data_cur_idx = self.received_data_separate_by_description('stephome', data_cur_idx)
 
-        data_cur_idx = self.received_data_separate_by_description('Laser state', data_cur_idx)
-        data_cur_idx = self.received_data_separate_by_description('Battery voltage', data_cur_idx)
-        data_cur_idx = self.received_data_separate_by_description('Battery check', data_cur_idx)
+        data_cur_idx = self.received_data_separate_by_description('laserstate', data_cur_idx)
+        data_cur_idx = self.received_data_separate_by_description('batteryvoltage', data_cur_idx)
+        data_cur_idx = self.received_data_separate_by_description('batterycheck', data_cur_idx)
 
 
     def received_data_separate_by_description(self, description, data_cur_idx):
