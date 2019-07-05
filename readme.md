@@ -70,7 +70,7 @@ pr.packet_transmit('Laser control', 'On')
 Here is more detail about usage of library.
 
 ---
-### <packet_transmit()>
+# packet_transmit()
 ### LED control
 ~~~
 pr = packet_reactor()
@@ -93,8 +93,38 @@ Turn on LED_C_2, LED_D_1, LED_D_2, LED_E_1, LED_E_2
 pr.packet_transmit('LED control', '0000011111')
 ~~~
 ---
-### 
+### BLDC motor control
+~~~
+pr = packet_reactor()
+pr.packet_transmit('BLDC motor control', {'Break':'Break disable', 'Direction' : 'CW', 'Speed' : 1000}) # second argument type is <dict>
+~~~
+This code is an example for control BLDC motor.<br>
+There are three option for BLDC motor control.<br>
+~~~
+pr.packet_transmit('BLDC motor control', {'Break':'Break disable', ...}) 
+pr.packet_transmit('BLDC motor control', {'Break':'Break enable', ...})
+~~~
+~~~
+pr.packet_transmit('BLDC motor control', {..., 'Direction' : 'CW', ...}) 
+pr.packet_transmit('BLDC motor control', {..., 'Direction' : 'CCW', ...}) 
+~~~
+~~~
+pr.packet_transmit('BLDC motor control', {..., 'Speed' : <number : speed>}) 
+~~~
+---
+### Step motor control
+~~~
+pr.packet_transmit('Step motor control', <number : position>)
+~~~
+---
+### Laser control
+~~~
+pr.packet_transmit('Laser control', 'On')
+pr.packet_transmit('Laser control', 'Off')
+~~~
+---
 
+---
 # json format
 ~~~
 {"BLDC direction": 1, "BLDC break": 1, "BLDC home": 0, "LED": {"LED_D_1": 0, "LED_D_2": 0, "LED_C_2": 0, "LED_C_1": 0, "LED_A_1": 0, "LED_A_2": 0, "LED_B_2": 0, "LED_B_1": 0, "LED_E_1": 0, "LED_E_2": 0}, "Laser state": 0, "Step position": 0, "Step moving": 0, "PHOTO": {"PHOTO_C_2": [128, 0], "PHOTO_C_1": [123, 0], "PHOTO_B_2": [119, 0], "PHOTO_B_1": [117, 0], "PHOTO_E_1": [114, 0], "PHOTO_E_2": [0, 0], "PHOTO_A_1": [120, 0], "PHOTO_A_2": [105, 0], "PHOTO_D_1": [125, 0], "PHOTO_D_2": [0, 0]}, "BLDC speed": 0, "Battery voltage": 184, "Battery check": 0, "Step home": 0}
