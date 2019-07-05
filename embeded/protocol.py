@@ -9,8 +9,8 @@ from option import *
 class packet_reactor(object):
     def __init__(self):
         self.received_data = {}
-        self.received_data['LED'] = {}
-        self.received_data['PHOTO'] = {}
+        #self.received_data['LED'] = {}
+        #self.received_data['PHOTO'] = {}
 
 
     def packet_receive(self, sleep_time = 1):
