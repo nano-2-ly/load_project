@@ -197,3 +197,9 @@ This method send data to socket.<br>
 This method get one argument, which type is < dict >. <br>
 Then < dict > would be changed in json data, and send to socket.<br>
 
+
+
+~~~
+{'photo_c_2': [0, 0], 'stepmoving': 0, 'photo_c_1': [120, 0], 'photo_b_2': [110, 0], 'photo_b_1': [129, 0], 'bldcdirection': 0, 'photo_e_1': [1, 1], 'photo_e_2': [0, 0], 'photo_d_1': [119, 0], 'photo_d_2': [0, 0], 'batteryvoltage': [48, 85], 'led_d_1': 160, 'led_d_2': 24, 'bldchome': 0, 'led_b_2': 32, 'laserstate': 134, 'led_b_1': 32, 'batterycheck': 170, 'led_e_1': 144, 'led_e_2': 1, 'led_c_2': 32, 'led_c_1': 32, 'led_a_1': 32, 'led_a_2': 32, 'bldcspeed': [206, 4], 'stepposition': [188, 48], 'bldcbreak': 0, 'photo_a_1': [25, 0], 'photo_a_2': [120, 0], 'stephome': 0}
+
+~~~
