@@ -110,10 +110,25 @@ pr.packet_transmit('BLDC motor control', {..., 'Direction' : 'CCW', ...})
 ~~~
 pr.packet_transmit('BLDC motor control', {..., 'Speed' : <number : speed>}) 
 ~~~
+### BLDC homing control
+~~~
+pr = packet_reactor()
+pr.packet_transmit('BLDC homing control', 'enable') # second argument type is <str>
+pr.packet_transmit('BLDC homing control', 'disable') # second argument type is <str>
+~~~
+
 
 ### Step motor control
 ~~~
+pr = packet_reactor()
 pr.packet_transmit('Step motor control', <number : position>)
+~~~
+
+### Step homing control
+~~~
+pr = packet_reactor()
+pr.packet_transmit('Step homing control', 'enable')
+pr.packet_transmit('Step homing control', 'disable')
 ~~~
 
 ### Laser control
@@ -155,8 +170,20 @@ Here is example
 ~~~
 ~~~
 {
+  'description' : 'BLDC homing control',
+  'data' : 'enable'
+}
+~~~
+~~~
+{
   'description' : 'Step motor control',
   'data' : 1000
+}
+~~~
+~~~
+{
+  'description' : 'Step homing control',
+  'data' : 'enable'
 }
 ~~~
 ~~~
