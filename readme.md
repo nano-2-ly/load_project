@@ -69,7 +69,7 @@ pr.packet_transmit('Laser control', 'On')
 # Document<br>
 Here is more detail about usage of library.
 
-# packet_transmit()
+# packet_reactor.packet_transmit()
 ### LED control
 ~~~
 pr = packet_reactor()
@@ -128,3 +128,18 @@ Return format would be
 ~~~
 {"photo_c_2": [0, 0], "stepmoving": 0, "photo_c_1": [0, 0], "photo_b_2": [0, 0], "photo_b_1": [0, 0], "bldcdirection": 0, "photo_e_1": [0, 0], "photo_e_2": [0, 0], "photo_d_1": [0, 0], "photo_d_2": [0, 0], "batteryvoltage": 196, "led_d_1": 0, "led_d_2": 0, "bldchome": 0, "led_b_2": 0, "laserstate": 0, "led_b_1": 0, "batterycheck": 0, "led_e_1": 0, "led_e_2": 0, "led_c_2": 0, "led_c_1": 0, "led_a_1": 0, "led_a_2": 0, "bldcspeed": 0, "stepposition": 255, "bldcbreak": 1, "photo_a_1": [0, 0], "photo_a_2": [0, 0], "stephome": 0}
 ~~~
+
+# server.recv_data()
+This method receive data from socket.<br>
+Socket would be receive data format like below (json format)<br>
+~~~
+{
+  'description' : < str : description >,
+  'data' : < str or dict : data >
+}
+~~~
+In this json format, content about 'description' and 'data' are same with packet_reactor.packet_receive()<br>
+# server.send_data()
+This method send data to socket.<br>
+This method get one argument, which type is < dict >. <br>
+Then < dict > would be changed in json data, and send to socket.<br>
