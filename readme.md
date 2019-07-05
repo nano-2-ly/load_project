@@ -139,7 +139,34 @@ Socket would be receive data format like below (dictionary type)<br>
 }
 ~~~
 In this json format, content about 'description' and 'data' are same with packet_reactor.packet_receive()<br>
+
+Here is example
+~~~
+{
+  'description' : 'LED control',
+  'data' : '1111111111' 
+}
+~~~
+~~~
+{
+  'description' : 'BLDC motor control',
+  'data' : {'Break':'Break disable', 'Direction' : 'CW', 'Speed' : 1000}
+}
+~~~
+~~~
+{
+  'description' : 'Step motor control',
+  'data' : 1000
+}
+~~~
+~~~
+{
+  'description' : 'Laser control',
+  'data' : 'On' 
+}
+~~~
 ## server.send_data()
 This method send data to socket.<br>
 This method get one argument, which type is < dict >. <br>
 Then < dict > would be changed in json data, and send to socket.<br>
+
