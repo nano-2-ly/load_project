@@ -13,7 +13,7 @@ class packet_reactor(object):
         #self.received_data['PHOTO'] = {}
 
 
-    def packet_receive(self, sleep_time = 1):
+    def packet_receive(self, sleep_time = 0):
         time.sleep(sleep_time)
         self.packet = self.packet_receive_from_uart()
         self.received_packet_separate()
@@ -25,7 +25,7 @@ class packet_reactor(object):
         else : 
             return False
 
-    def packet_transmit(self, description, data, sleep_time = 1):
+    def packet_transmit(self, description, data, sleep_time = 0):
         time.sleep(sleep_time)
         data_array = self.create_data_array(description, data)
         self.packet_to_transmit = self.create_packet_array(description, data_array)
@@ -89,7 +89,7 @@ class packet_reactor(object):
             
             if data == 'enable':
                 data_array.append(1)
-            elif data == 'disable':
+            elif data == 'Disable':
                 data_array.append(0)
 
             return data_array
@@ -108,7 +108,7 @@ class packet_reactor(object):
             
             if data == 'enable':
                 data_array.append(1)
-            elif data == 'disable':
+            elif data == 'Disable':
                 data_array.append(0)
 
             return data_array

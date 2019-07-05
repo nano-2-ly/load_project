@@ -12,6 +12,7 @@ while 1:
 	# receive data from server
 	print('re')
 	received_data = sv.recv_data()
+	
 	if received_data['description'] == "Status":
 		print('recv : status')
 		pr.packet_receive()

@@ -14,20 +14,25 @@ class server(object):
         self.server_.bind(('', self.port))
         self.server_.listen(5)
         print('listen...')
+        
 
     def recv_data(self,):
         self.client, addrClient = self.server_.accept()
         print(addrClient)
         msg = ''
         while 1:
-            msg_part = self.client.recv(1024).encode('utf-8')
+            msg_part = self.client.recv(1024).decode('utf-8')
             msg += msg_part
 
             if '}' in msg:	
                 print('msg recv complete')
                 break
-
-        json_data = json.loads(str(msg.decode('utf-8')))
+        msg = msg.split('}')[0] + '}'
+        if 'BLDC motor control' in msg:
+            msg += '}'
+        print(msg)
+        print(type(msg))
+        json_data = json.loads(str(msg))
         return json_data
 
     def send_data(self, send_dict):
