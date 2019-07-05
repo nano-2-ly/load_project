@@ -131,7 +131,7 @@ Return format would be
 
 ## server.recv_data()
 This method receive data from socket.<br>
-Socket would be receive data format like below (json format)<br>
+Socket would be receive data format like below (dictionary type)<br>
 ~~~
 {
   'description' : < str : description >,
