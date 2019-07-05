@@ -17,6 +17,7 @@ while 1:
 		print('recv : status')
 		pr.packet_receive()
 		Status_data = pr.received_data
+		print(Status_data)
 		sv.send_data(Status_data)
 		#sv.send_data('123')
 	else:
