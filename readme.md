@@ -1,5 +1,5 @@
 <img src="./readme/img/logo.png" width="35%" height="35%"></br>
-# LOAD(lab on a chip)
+# LOAD(lab on a disk)
 LOAD(lab on a chip) system control program
 
 ## 1. Overview
