@@ -13,7 +13,7 @@ class packet_reactor(object):
         #self.received_data['PHOTO'] = {}
 
 
-    def packet_receive(self, sleep_time = 1):
+    def packet_receive(self, sleep_time = 0):
         time.sleep(sleep_time)
         self.packet = self.packet_receive_from_uart()
         self.received_packet_separate()
@@ -25,7 +25,7 @@ class packet_reactor(object):
         else : 
             return False
 
-    def packet_transmit(self, description, data, sleep_time = 1):
+    def packet_transmit(self, description, data, sleep_time = 0):
         time.sleep(sleep_time)
         data_array = self.create_data_array(description, data)
         self.packet_to_transmit = self.create_packet_array(description, data_array)
@@ -155,12 +155,21 @@ class packet_reactor(object):
         data_cur_idx = self.received_data_separate_by_description('Laser state', data_cur_idx)
         data_cur_idx = self.received_data_separate_by_description('Battery voltage', data_cur_idx)
         data_cur_idx = self.received_data_separate_by_description('Battery check', data_cur_idx)
-
+        
+        #endian issue
+        #self.received_data['bldcspeed'] = self.received_data['bldcspeed'][0] + self.received_data['bldcspeed'][1] * 256
+        #self.received_data['stepposition'] = self.received_data['stepposition'][0] + self.received_data['stepposition'][1] * 256
+        #self.received_data['batteryvoltage'] = self.received_data['batteryvoltage'][0] + self.received_data['batteryvoltage'][1] * 256
 
     def received_data_separate_by_description(self, description, data_cur_idx):
-        self.received_data[description.replace(" ","").lower()] = self.Data[data_cur_idx]
-        data_cur_idx += data_size[description]
-        return data_cur_idx
+        if data_size[description] == 1:
+            self.received_data[description.replace(" ","").lower()] = self.Data[data_cur_idx]
+            data_cur_idx += data_size[description]
+            return data_cur_idx
+        elif data_size[description] == 2:
+            self.received_data[description.replace(" ","").lower()] = self.Data[data_cur_idx:data_cur_idx+2]
+            data_cur_idx += data_size[description]
+            return data_cur_idx
 
         
     def packet_receive_from_uart(self,):
@@ -269,3 +278,4 @@ pr.received_packet_separate()
 pr.received_data_separate()
 pass
 '''
+
